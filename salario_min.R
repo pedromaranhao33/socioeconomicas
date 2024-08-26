@@ -1,6 +1,7 @@
 ####################### Autor: Pedro Maranhão
 
-############### Comparar salário minímo nominal com salário mínimo real ######
+### Comparar salário minímo nominal com salário mínimo real de 2014 a 2022 
+### utilizando o IPCA de julho de 2024 
 
 # evitar notação científica
 
@@ -16,7 +17,8 @@ library(sidrar)
 
 setwd('C:/Users/55819/Desktop/scripts_r')
 
-# identificar dados na api do ipea
+# utilizar a função available_series para encontrar o nome da base 
+# em que se encontra os dados do salário mínimo
 
 series <- ipeadatar::available_series()
 
@@ -25,6 +27,7 @@ series <- ipeadatar::available_series()
 sal_min <- ipeadata('MTE12_SALMIN12')
 
 # extrair dados de 10 anos de salário mínimo (2014 a 2024)
+
 sal_min <- sal_min %>% 
   select(date, value) %>% 
   filter(date >= '2014-01-01')
@@ -40,18 +43,19 @@ ipca <- ipca %>%
          date = `Mês (Código)`) %>% 
   mutate(date = ym(date))
 
-# realizar Join entre as bases
+# realizar Join entre as bases e retirar os NA's 
 
 sal_real <- left_join(ipca, sal_min) %>% 
   na.omit()
 
-# deflacionar utilizando o último valor do IPCA com a função last
+# deflacionar utilizando o último valor do IPCA com a função last 
+# para criar o fator e o valor real
 
 sal_real <- sal_real %>% 
   mutate(fator = (last(indice) / indice)) %>% 
   mutate(real = fator*value)
 
-# plotando gráfico
+# plotando gráfico da série histórica
 
 ggplot(data = sal_real, aes(x = date)) +
   geom_line(aes(y = value, colour = "Nominal"),size = 1.) +
