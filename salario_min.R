@@ -1,6 +1,6 @@
 ####################### Autor: Pedro Maranhão
 
-### Comparar salário minímo nominal com salário mínimo real de 2014 a 2022 
+### Comparar salário minímo nominal com salário mínimo real de 2014 a 2024 
 ### utilizando o IPCA de julho de 2024 
 
 # evitar notação científica
